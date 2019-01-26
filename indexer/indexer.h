@@ -23,6 +23,8 @@ public:
 public slots:
 
     void init(QString const &path) {
+        cancelled = false;
+
         rootDir = QDir(path);
         indexDir = rootDir;
         rootDir.setFilter(QDir::Files |
@@ -41,6 +43,7 @@ public slots:
 
 
     void findGoodFiles(QString const &query) {
+        cancelled = false;
         try {
             index.forEachGoodName(query.toStdString(), [this, &query](std::string name) {
                 QCoreApplication::processEvents();
@@ -56,6 +59,7 @@ public slots:
 
     void cancel() {
         index.cancel();
+        cancelled = true;
     }
 
 
@@ -70,7 +74,7 @@ private:
         QFileInfo indexFileInfo(indexDir, fileName);
         QFileInfo origFileInfo(rootDir, fileName);
 
-        //std::cerr << fileName.toStdString() << std::endl;
+        std::cerr << fileName.toStdString() << std::endl;
         {
             std::ifstream stream(origFileInfo.absoluteFilePath().toStdString());
             index.remove(fileName.toStdString());
@@ -94,6 +98,7 @@ private:
         QFileInfo indexFileInfo(indexDir, fileName);
         QFileInfo origFileInfo(rootDir, fileName);
 
+        std::cerr << fileName.toStdString() << std::endl;
         if (indexFileInfo.size() == 0) {
             std::ifstream stream(origFileInfo.absoluteFilePath().toStdString());
             index.add(fileName.toStdString(), stream);
@@ -114,6 +119,12 @@ private:
             QFileInfo indexFileInfo(indexDir, fileName);
             QFileInfo origFileInfo(rootDir, fileName);
 
+            QCoreApplication::processEvents();
+
+            if (cancelled) {
+                return;
+            }
+
             if (indexFileInfo.exists() && indexFileInfo.lastModified() > origFileInfo.lastModified()) {
                 loadFileIndex(fileName);
             } else {
@@ -126,4 +137,5 @@ private:
     QDir rootDir;
     QDir indexDir;
     Index index;
+    bool cancelled = false;
 };

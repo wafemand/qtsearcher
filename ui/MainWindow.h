@@ -54,6 +54,7 @@ public:
 
 
     ~MainWindow() {
+        emit cancelIndexer();
         indexerThread.quit();
         indexerThread.wait();
         finderThread.quit();
