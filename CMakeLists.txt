@@ -53,19 +53,3 @@ add_executable(testing
         tests/gtest/gtest-all.cc
         tests/gtest/gtest_main.cc)
 target_link_libraries(testing ${LIBRARIES})
-
-
-# 1) random test      DONE
-# 2) removing test    DONE
-# 3) basic indexer    DONE
-# 4) GUI              IN PROGRESS
-# 5) cancellation
-# 6) indexer test
-
-
-# рандомные идеи:
-#
-#
-#
-#
-#
