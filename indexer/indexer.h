@@ -70,7 +70,7 @@ private:
         QFileInfo indexFileInfo(indexDir, fileName);
         QFileInfo origFileInfo(rootDir, fileName);
 
-        std::cerr << fileName.toStdString() << std::endl;
+        //std::cerr << fileName.toStdString() << std::endl;
         {
             std::ifstream stream(origFileInfo.absoluteFilePath().toStdString());
             index.remove(fileName.toStdString());
